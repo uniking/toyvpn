@@ -249,7 +249,7 @@ public class ToyVpnConnection implements Runnable {
                         lastSendTime = timeNow;
                     } else if (lastReceiveTime + RECEIVE_TIMEOUT_MS <= timeNow) {
                         // We are sending for a long time but not receiving.
-                        throw new IllegalStateException("Timed out");
+                        ;//throw new IllegalStateException("Timed out");
                     }
                 }
             }
