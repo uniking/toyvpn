@@ -198,6 +198,15 @@ public class ToyVpnConnection implements Runnable {
             long lastSendTime = System.currentTimeMillis();
             long lastReceiveTime = System.currentTimeMillis();
 
+            //add by wzl for test http proxy
+            //如果使用http proxy, 不需要读写网卡, 流量自己就转发到http proxy了
+            //toyVPN中还是需要启动linux server, 它提供了vpn启动需要的一些配置, 除此以外linux server在这里没有任何用处了
+            if(mProxyHostName != null && mProxyHostName.length() != 0){
+                while (true){
+                    Thread.sleep(1000*5);
+                }
+            }
+
             // We keep forwarding packets till something goes wrong.
             while (true) {
                 // Assume that we did not make any progress in this iteration.
