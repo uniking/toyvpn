@@ -29,6 +29,7 @@ import android.util.Log;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -201,11 +202,11 @@ public class ToyVpnConnection implements Runnable {
             //add by wzl for test http proxy
             //如果使用http proxy, 不需要读写网卡, 流量自己就转发到http proxy了
             //toyVPN中还是需要启动linux server, 它提供了vpn启动需要的一些配置, 除此以外linux server在这里没有任何用处了
-            if(mProxyHostName != null && mProxyHostName.length() != 0){
-                while (true){
-                    Thread.sleep(1000*5);
-                }
-            }
+//            if(mProxyHostName != null && mProxyHostName.length() != 0){
+//                while (true){
+//                    Thread.sleep(1000*5);
+//                }
+//            }
 
             // We keep forwarding packets till something goes wrong.
             while (true) {
@@ -321,18 +322,27 @@ public class ToyVpnConnection implements Runnable {
                 switch (fields[0].charAt(0)) {
                     case 'm':
                         builder.setMtu(Short.parseShort(fields[1]));
+                        Log.i(getTag(), "setMtu " + Short.parseShort(fields[1]));
                         break;
                     case 'a':
+                        //本机的ip地址
                         builder.addAddress(fields[1], Integer.parseInt(fields[2]));
+                        Log.i(getTag(), "addAddress " + fields[1] + "/" +fields[2]);
                         break;
                     case 'r':
+                        //哪些网段走vpn
                         builder.addRoute(fields[1], Integer.parseInt(fields[2]));
+                        Log.i(getTag(), "addRoute " + fields[1] + "/" +fields[2]);
                         break;
                     case 'd':
+                        //全局dns服务, 设置后其他应用使用指定的dns服务器查询
                         builder.addDnsServer(fields[1]);
+                        Log.i(getTag(), "addDnsServer " + fields[1]);
                         break;
                     case 's':
+                        //未知
                         builder.addSearchDomain(fields[1]);
+                        Log.i(getTag(), "addSearchDomain " + fields[1]);
                         break;
                 }
             } catch (NumberFormatException e) {
